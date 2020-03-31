@@ -1,4 +1,12 @@
-------------- Finite Difference Time Domain (toy program) -----------------
+IrisFDTD-Academic, copyright (C) 2019-2020 Sergio G Rodrigo <sergut@unizar.es>
+
+*IrisFDTD-Academic* is licensed under the AGPL and it is free to use. 
+if you are using, or plan to use this example, specially if it is 
+for research or academic purposes, please send an email with your name, 
+institution and a brief description of your interest for this program. 
+
+---------------------------------------------------------------------------------------------------------------------------------------
+Common definitions 
 
 "Mesh options"
 2   	i_pol (polarization of light; i_pol=1 -> E//y ; i_pol=2 -> E//x
@@ -14,53 +22,50 @@
 
 "Source options"
 1						plane_wave          (Total Field / Scattered Field source; plane_wave=0 -> continuous wave (CW); plane_wave=1 -> Gaussian wave (GW))
-20.0 180.0                 tincr_PW,tdecay_PW  (only for plane_wave=0; tincr_PW= onset of CW ; tdecay_PW = end of CW; both in fs)
+20.0 180.0              tincr_PW,tdecay_PW  (only for plane_wave=0; tincr_PW= onset of CW ; tdecay_PW = end of CW; both in fs)
 1.0 689.0 2.0 4 		Epump               (kV/cm ,wavelength_pump(nm ,time_width(fs ,width_factor exp(-width_factor =exp(-(2*t/time_width^2))
 105   				    tfsf_o       (TFSF onset at z=tfsf_o of an infinite half-space starting at z=tfsf_o)
 0 						cosine              (cosine=0 -> complex-valued source; cosine=1-> real-valued source)
 
 "Job options"
-2 1 0	runmode 
-2  		m_structure
-50 100 	no_archivos Output files unloaded a "no_archivos"times
+50 1000	no_downloads,OUTPUT_TIME_STEP (no_dowloads=times output files are generated; OUTPUT_TIME_STEP = screen shows the simulation progrees on the screen)
 200.0   itmax (simulation total time in fs)
-150 	hi (all structures are defined between hi and hf)
-0 1 0   SDL_X,SDL_Y,SDL_Z (plane for movie generation)
+150 	hi (all structures are defined between hi and hf; hf define later)
+0 1 0   SDL_X,SDL_Y,SDL_Z (planes for EM time evolution maps; SDL_X=1-> YZ-plane; SDL_Y=1-> XZ-plane; SDL_Z=1-> XY-plane;)
 
 "Dielectric constants"
 1.0    eps_cover (reflection region)
 9.0    eps_bbox (default dielectric constant inside structures)
 1.0    eps_substrate (transmission region)
 
+---------------------------------------------------------------------------------------------------------------------------------------------
+Currents are calculated in a boxed defined by the planes: 1-[syi,syf]x[szi,szf] at x=sxi; 2-[syi,syf]x[szi,szf] at x=sxf;
+														  3-[sxi,sxf]x[szi,szf] at y=syi; 4-[sxi,sxf]x[szi,szf] at y=syf; 
+														  5-[sxi,sxf]x[syi,syf] at z=szi (REF); 5-[sxi,sxf]x[syi,syf] at z=szf (TRANS);
+														  (s and m for two different boxes) 
 "Fourier transformation options"
-6 rwmode 0:To calculate EM fields 2:post processing
-1 1 sxi mxi
-1 1 sxf mxf
-1 1 syi myi
-1 1 syf myf
-90 90 szi mzi
-320 320 mzf mzi
+1 1     sxi mxi  
+1 1     sxf mxf
+1 1     syi myi
+1 1     syf myf
+90 90   szi mzi
+320 320 szf mzi
+500     nof     (number of wavelengths)
+5.0     dlambda (wavelength step in nm)
+400.0   lno     (initial wavelength in nm)
+0 1     to_Fourier,sample_Fourier (to_Fourier onset of Fourier on-time Fourier transformation, sampled each sample_Fourier times)
 
-"w=cte"
-0 emmode
-0 Direct wavelength reading - 0:Off ; 1:On
-500 total_number_of_lamdas
-5.0 lamda_increment
-400.0 lo - Initial wavelength
-0 1 to_Fourier, sample_Fourier
 
-"X=cte"
-0
-"Y=cte"
-0
-"Z=cte"
-0
+---------------------------------------------------------------------------------------------------------------------------------------------
+Snapshots of EM fields on a given plane are generated:  SDL_X=1  [syi,syf]x[szi,szf] at x=sxi=sxf
+														SDL_Y=1  [sxi,sxf]x[szi,szf] at y=syi=syf
+														SDL_Z=1  [sxi,sxf]x[syi,syf] at z=szi=szf
+														
 
 "Time evolution options"
-"cluster" m_RUTASDL " m_RUTASDL "cluster" SH m_RUTASDL
-1 300 0 0		SDL options
+1 300 	SDL_copy_flag,SDL_copy_no (For SDL_copy_flag=1 the snapshot is repeated SDL_copy_no times)
 0 1   0   	sxi
-0 1 0 	sxf
+0 1   0 	sxf
 0 1   0   	syi
 0 1   0 	syf
 0 75  0 	szi
@@ -72,9 +77,11 @@
 0 			Hx
 0 			Hy
 0 			Hz
-1 100 1 1 75 325 sxi,sxf,syi,syf,szi,szf
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+Geometrical parameters to build the structure
 
 # STRUCTURES
 "Slit Array"
-150    h_bbox
-0      slit width
+150    Dh (the structure starts at z=hi and it ends at z=hi+Dh-1
+0      dx (slit width for a slit array structure)

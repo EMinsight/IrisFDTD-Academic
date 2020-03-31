@@ -24,7 +24,7 @@
 
 module files
 ! Set the unit numbers for the files we want to access
-integer,parameter :: logfile=10,wpfile=11
+integer,parameter :: logfile=10
 integer,parameter :: inFDTD=16
 integer,parameter :: meshgraph=17
 integer,parameter :: out1=18,out2=19,out3=20,out4=21,out5=22,out6=23,out7=24,out8=25,out9=41
@@ -120,14 +120,17 @@ do while(msg/=msg1)
      read(inFDTD,*) msg
 end do
 
-read(inFDTD,*) runmode,SDL_ON
+!read(inFDTD,*) runmode,SDL_ON
+runmode=2 !For this version
+
 select case(runmode)  
   case(2)
      runname = runmode_2  
 end select
 write(logfile,'(A16,A20)') runname//' mode running...'    
 
-read(inFDTD,*) m_structure 
+!read(inFDTD,*) m_structure 
+m_structure = 2 !For this version
    select case(m_structure)	  
 	   case(nostr_2)
 	    grating = str_2
@@ -145,7 +148,11 @@ no_downloads=int(texit/no_downloads)
 read(inFDTD,*) hi
     write(logfile,'(A1,A12,I10)') '#','hi=',hi
 
-if(SDL_ON==1) read(inFDTD,*) SDL_plane_on(1),SDL_plane_on(2),SDL_plane_on(3)
+read(inFDTD,*) SDL_plane_on(1),SDL_plane_on(2),SDL_plane_on(3)
+if(SDL_plane_on(1)+SDL_plane_on(2)+SDL_plane_on(3)) then 
+    SDL_ON=1
+end if
+    
 rewind(unit=inFDTD)  
  do while(msg/=msg5)
    read(inFDTD,*) msg
@@ -173,7 +180,8 @@ do while(msg/=runmode_2)
 end do
 
 if(runmode==norunmode_2)then
-	read(inFDTD,*) rwmode	
+	!read(inFDTD,*) rwmode	
+    rwmode=6 !For this version
 	write(logfile,'(A1,A22,I1)') '#','F(r,wo) or F(ro,w)..=',rwmode
         read(inFDTD,*) sxi,mxi
         read(inFDTD,*) sxf,mxf
@@ -182,15 +190,17 @@ if(runmode==norunmode_2)then
         read(inFDTD,*) szi,mzi
         read(inFDTD,*) szf,mzf  
     
-		rewind(unit=inFDTD)
-        do while(msg/='w=cte')
-          read(inFDTD,*) msg
-        end do		
+		!rewind(unit=inFDTD)
+        !do while(msg/='w=cte')
+        !  read(inFDTD,*) msg
+        !end do		
         
-		read(inFDTD,*) emmode
+		!read(inFDTD,*) emmode
+        emmode=0 !For this version
 		write(logfile,'(A1,A22,I1)') '#','Electromagnectic mode=',emmode		
 
-		read(inFDTD,*) file_direct
+		!read(inFDTD,*) file_direct
+        file_direct = 0 !For this version
 		write(logfile,'(A1,A22,I1)') '#','Direct wavelength reading=',file_direct 
 
 		read(inFDTD,*) nof	
@@ -205,7 +215,6 @@ if(runmode==norunmode_2)then
          lno_aux=lno
          do while(i<=nof)		   
 		   fw(i) =2.0*pi*c0*dt/(f_abohr*lno_aux)
-		   write(wpfile,*),i,' = ',lno_aux
 		   i= i+1		
 		   lno_aux = lno_aux + dlamda              
          end do	 
@@ -237,7 +246,6 @@ if(runmode==norunmode_2)then
 		  end do	 		 
 		  nof = nowav*nof !>>> This is important when running the subroutines remaining.
 		 end select
-
 
    read(inFDTD,*) to_Fourier,sample_Fourier
    write(logfile,'(A1,A12,(I2))') '#','to_Fourier=',to_Fourier  	

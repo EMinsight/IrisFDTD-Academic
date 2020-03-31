@@ -895,11 +895,14 @@ subroutine setparam_SDL(inputSDL_FILE,log_FILE,SDL_name)
     read(inputSDL_FILE,*) message
   end do  
     
-  read(inputSDL_FILE,*) RUTA_SDL
+  !read(inputSDL_FILE,*) RUTA_SDL
+  RUTA_SDL='cluster' !In this version
   if (RUTA_SDL=='') call err(13)
   write(log_FILE,'(A1,A12,A80)') '#','SDL path=',RUTA_SDL 
   write(log_FILE,'(A1,A28,I10,A6)') '#','Archivos ha generar..=',NO_FILES,' pasos'
-  read(inputSDL_FILE,*) SDL_copy_flag,SDL_copy_no,SDL_rotate_90,SDL_rotate_180 !,SDL_scale,scale_factor
+  !read(inputSDL_FILE,*) SDL_copy_flag,SDL_copy_no,SDL_rotate_90,SDL_rotate_180 !,SDL_scale,scale_factor
+  read(inputSDL_FILE,*) SDL_copy_flag,SDL_copy_no
+  SDL_rotate_90=0; SDL_rotate_180= 0!In this version !,SDL_scale,scale_factor
   read(inputSDL_FILE,*) xi(1),xi(2),xi(3)
   read(inputSDL_FILE,*) xf(1),xf(2),xf(3)
   read(inputSDL_FILE,*) yi(1),yi(2),yi(3)

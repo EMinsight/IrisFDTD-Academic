@@ -113,6 +113,7 @@ use files
 	complex(precision) ::cn,cnp	
 	real(precision)  :: R,T
 
+ open(unit=spectra,file='dielectric_layer_spectra.dat',status='unknown',action='write',position="REWIND")    
  ! >>> Lossless dielectric film of thickness Dh <<< !      
    do iw=nwo,nwf
 		lp=lno+dlamda*(iw-1.0)	! in nm
@@ -125,7 +126,8 @@ use files
 		R = cdabs(dconjg(cn)*cn)
         T = 1.0d0 - R       
 		write(spectra,*) lp,R,T
-	end do
+   end do
+  close(spectra)
 end subroutine
 
 end module COMMON_SUBROUTINES

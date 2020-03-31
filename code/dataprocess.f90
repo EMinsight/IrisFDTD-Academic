@@ -297,13 +297,6 @@ open(unit=out6,file=trim(noboxAscii)//'_scatt.dat',status='unknown',action='writ
   end do
 
 close(out6)
-
-open(unit=out6,file=trim(noboxAscii)//'_T_dw.dat',status='unknown',action='write',position='append')    
- 
-  write(out6,*) '#',it
-  do iw=1,nof
-    write(out6,*) Jabs(6,iw)
-  end do
 !    Total current <<<
 
 deallocate(Jabs)
