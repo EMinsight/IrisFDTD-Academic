@@ -27,6 +27,7 @@ class fdtdEMt:
     import struct
     import os 
     import sys
+
     
     nx=self.nx
     ny=self.ny        
@@ -75,6 +76,7 @@ class fdtdEMt:
     print("Building SDL matrices done")     
     
     Z=np.array(Z,dtype='float')  
+    print("A numpy array created with shape = ",Z.shape)
     return Z
     
     if(False):
@@ -112,6 +114,8 @@ class fdtdEMt:
     import matplotlib.pyplot as plt   
     import numpy as np      
     import os    
+    from mpl_toolkits.axes_grid1 import make_axes_locatable
+    import matplotlib.ticker as ticker
     
     nx=self.nx
     ny=self.ny    
@@ -121,6 +125,12 @@ class fdtdEMt:
     fplane=self.endtime
     endt=self.endtime
     
+    # Scientific notation 
+    def fmt(x, pos):
+        a, b = '{:.2e}'.format(x).split('e')
+        b = int(b)
+        return r'${} \times 10^{{{}}}$'.format(a, b)
+
     # kwargs
     ititle=kwargs.get('ini',1.0) # Title can include the value of a magnitude such: "Title name (in units) = ini+delta*(i-1)"
     dtitle=kwargs.get('delta',1.0)
@@ -168,8 +178,7 @@ class fdtdEMt:
     
     # dpi, figx, figy have been chosen by hand --> no rule used
     dpi=200
-    figx= 10 ; figy=figx*dims[1]/dims[2]
-    fig=plt.figure(num=None, dpi=dpi,   figsize=(figx,figy), facecolor='b', edgecolor='k')
+    figx= 5 ; figy=figx*dims[1]/dims[2]    
     # Creates .png files from Z-matrix
     # initiate an empty  list of "plotted" images 
     #myimages = []
@@ -179,21 +188,22 @@ class fdtdEMt:
     # interpolation = [None, 'none', 'nearest', 'bilinear', 'bicubic', 'spline16',
     #   'spline36', 'hanning', 'hamming', 'hermite', 'kaiser', 'quadric',
     #   'catrom', 'gaussian', 'bessel', 'mitchell', 'sinc', 'lanczos']
-    for l in range(iplane,fplane+1):
+    for l in range(iplane,fplane): # Bwlow is taken into account Z starts at 0
+        fig, ax=plt.subplots(num=None, dpi=dpi,   figsize=(figx,figy), facecolor='w', edgecolor='k')
         if(prinfo): print("Figure loaded",l)    # cmap options = https://matplotlib.org/3.1.0/tutorials/colors/colormaps.html      
-        imgplot=plt.imshow(Z[l-iplane], extent=[0.0, dims[2], 0.0,dims[1]], origin='lower',
-                              cmap='hot',interpolation='gaussian',vmin=vmn, vmax=vmx)   #Z index stars at 0                
-        #plt.axis(aspect='image')          
-        plt.xlabel(xdir,fontsize=15)
-        plt.ylabel(ydir,fontsize=15)
-        #plt.title(title+str(ititle+(l-1)*dtitle),fontsize=20)               
-        plt.title(title %(ititle+(l-1)*dtitle),fontsize=20)               
-        clb = plt.colorbar()
+        imgplot=ax.imshow(Z[l-iplane], extent=[0.0, dims[2], 0.0,dims[1]], origin='lower',
+                              cmap='afmhot',interpolation='gaussian',vmin=vmn, vmax=vmx)   #Z index stars at 0                
+        ax.set_xlabel(xdir,fontsize=15)
+        ax.set_ylabel(ydir,fontsize=15)
+        ax.set_title(title %(ititle+(l-1)*dtitle),fontsize=14)    
+        divider = make_axes_locatable(ax)
+        cax = divider.append_axes("right", size="5%", pad=0.05)
+        clb = plt.colorbar(imgplot,cax=cax) #,format=ticker.FuncFormatter(fmt))
         clb.ax.set_title(labelcmap,fontsize=15)        
         plt.savefig(path+"output"+str(l)+".png")                          
         #myimages.append([imgplot]) 
         plt.show() 
-        plt.clf()  
+        #plt.clf()  
         '''
         # Things for SERS pyramids
         A=np.array(Z[l-initime],dtype='float')
@@ -223,7 +233,7 @@ class fdtdEMt:
         print("Check ffmpeg path and dimensions for MPEG-4 (dpi,figx and figy)")
     print("Creating animation done")       
      
-    for l in range(iplane,fplane+1):         
+    for l in range(iplane,fplane):         
         fname = path+"output"+str(l)+".png"
         if(True):os.remove(fname)
     print("Files output*.png removed")                
