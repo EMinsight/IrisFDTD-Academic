@@ -28,8 +28,14 @@ The FDTD method has been applied in a great variety of engineering and physical 
 *Working with *IrisFDTD-Academic**
 ----------------------------------------------------
 
-<img  style="float: right;" src="example_1.png" width="300" height="150">
-The best way (as always) to learn and use new programs is going through the examples. For instance, the first example provided allows us to calculate the fraction of light transmitted and reflected through a dielectric thin sheet in normal incidence (see example_1 directory). This is a very simple system but that provides strong insight in the physics of waves (interference, difracction, material properties,...). 
+
+<img  style="float: right;" src="example_1.png" width="400" height="200">
+The best way (as always) to learn and use new programs is going through the examples. Find two in folders example_1 and example_2.
+
++ **example_1**: the first example allows us to calculate the fraction of light transmitted and reflected through a dielectric thin sheet in normal incidence (see example_1 directory). This is a very simple system but that provides strong insight in the physics of waves (interference, difracction, material properties,...). 
+
++ **example_2**: this example allows you to calculate the fraction of light transmitted and reflected through a slit array made of a lossless dielectric, at normal incidence. 
+
 
 Note that: 
 

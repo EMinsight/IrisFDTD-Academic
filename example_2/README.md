@@ -10,9 +10,9 @@ Sergio G. Rodrigo, [*Optical Properties of Nanostructured Metallic Systems: Stud
 - - -
 > **Example 2: transmission and reflection through a slit array made of a lossless dielectric**
 
-The second example allows you to calculate the fraction of light transmitted and reflected through a slit array made od a lossless dielectric, at normal incidence. This is a very simple system but that provides strong insight into the physics of waves (interference, difracction, material properties,...). 
+The second example allows you to calculate the fraction of light transmitted and reflected through a slit array made of a lossless dielectric, at normal incidence. This is a very simple system but that provides strong insight into the physics of waves (interference, difracction, material properties,...). 
 
-The figure shows the FDTD results for a dielctric with dielectric constant $\epsilon_2=9.0$ and thickness $h=100$nm. The period $p=500$nm and the slits are $100$nm width (free-standing film).
+The structrue consists in a slit array made of a lossless dielectric ($\epsilon_2=9.0$). The geometrical parameters are: thickness $h=100$nm, period $p=500$nm and slit width $w=100$nm (free-standing film).
 
 
  <img  style="float: right;" src="example_2_img1.png" width="500" height="300" title="Transmission and reflection figure shown by irisfdtd_scatt.py">
